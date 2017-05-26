@@ -38,7 +38,7 @@ require("class/funzioni.php");
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4 col-lg-3">
+                    <div class="fotoTitle col-sm-4 col-lg-3">
                         <div id="totFonti" class="widget bg-red">
                             <div class="widget-title">
                                 <h3>FOTO CARICATE</h3>
@@ -47,19 +47,16 @@ require("class/funzioni.php");
                             <div class="widget-icon"><i class="fa fa-camera-retro" aria-hidden="true"></i></div>
                         </div>
                     </div>
-                    <div class="col-sm-8 col-lg-9">
-                        <ul>
+                    <div class="fotoListDiv col-sm-8 col-lg-9">
+                        <div class="overlayTip"><h4>Foto random <small class="visible-xs-block visible-sm-block visible-md-block">clicca sulla foto per aprire la scheda relativa</small></h4></div>
+                        <div class="list-group">
                             <?php
                             $fotoArr = fotoRandom();
                             foreach ($fotoArr as $key => $foto) {
-                                echo "<li class='col-lg-4 col-md-4 col-sm-4 col-xs-12'>";
-                                echo "<a href='#' data-tooltip='tooltip' title='apri la scheda ".$foto['dgn_numsch']."'>";
-                                echo "<img src='foto/".$foto['path']."' class='img-responsive' />";
-                                echo "</a>";
-                                echo "</li>";
+                                echo "<div class='fotoList list-group-item col-sm-4' data-scheda='".$foto['scheda']."' data-path='foto/".$foto['path']."' data-tooltip='tooltip' title='apri la scheda ".$foto['dgn_numsch']."'></div>";
                             }
                             ?>
-                        </ul>
+                        </div>
                     </div>
                 </div>
 
@@ -72,8 +69,20 @@ require("class/funzioni.php");
                     </div>
                     <div class="col-md-4 hidden-sm hidden-xs">
                         <div class="panel panel-inverse">
-                            <div class="panel-heading">Località</div>
-                            <div id="localita" class="panel-body"></div>
+                            <div class="panel-heading">Comuni</div>
+                            <div class="list-group">
+                                <?php
+                                $comuniArr = comuniCoo();
+                                foreach ($comuniArr as $key => $comune) {
+                                    echo "<a href='#' class='list-group-item prevent zoom2ext' data-xmin='".$comune['xmin']."' data-ymin='".$comune['ymin']."' data-xmax='".$comune['xmax']."' data-ymax='".$comune['ymax']."'>".$comune['comune']."</a>";
+                                }
+                                ?>
+                            </div>
+                            <div class="panel-footer">
+                                <p>La lista elenca i Comuni coinvolti nel progetto NOME DEL PROGETTO.</p>
+                                <p>Qui si può scrivere qualcosa sui Comuni o dare altre informazioni di tipo topografico in modo da riempire lo spazio vuoto</p>
+                                <p>Invece dei Comuni si possono inserire le ultime X aree d'interesse o altri elementi geoetrici</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -81,7 +90,25 @@ require("class/funzioni.php");
         </section>
         <footer id="mainFooter"><?php require("inc/footer.php"); ?></footer>
         <div id="popup"></div>
-        <?php require("inc/modal.php"); ?>
+        
         <?php require("lib/script.php"); ?>
+        <script>
+        $(document).ready(function(){
+            var heightFotoList = $(".fotoTitle").innerHeight();
+            $(".row:nth-child(even)").css({"margin-top":"10px","margin-bottom":"10px"});
+            $(".fotoList").each(function(){
+                var path = $(this).data('path');
+                var scheda = $(this).data('scheda');
+                $(this)
+                    .css({"cursor":"pointer","height":heightFotoList+"px","background":"url("+path+") no-repeat center center","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover","background-size":"cover"})
+                    .click(function(){window.location.href="../andalo/scheda_archeo.php?id="+scheda;});
+
+            });
+            $(".fotoListDiv").on({
+                mouseenter:function(){$('.overlayTip').fadeIn('fast');},
+                mouseleave:function(){$('.overlayTip').fadeOut('fast');}
+            });
+        });
+        </script>
     </body>
 </html>

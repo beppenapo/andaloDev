@@ -8,4 +8,5 @@ if (isset($_SESSION['id'])) {
     $sessione = 'hidden';
     $logInOut = '<a href="#" data-toggle="tooltip" data-placement="left" id="login" title="accedi alla tua bacheca personale"><i class="fa fa-sign-in" aria-hidden="true"></i> login</a>';
 }
+require("inc/modal.php");
 ?>

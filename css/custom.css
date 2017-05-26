@@ -63,7 +63,7 @@ a.active:before{ content: "\f0da"; font-family: FontAwesome; display: block; hei
 .no-padding{padding:0px;}
 .inline-block{display:inline-block;}
 .list-group.fonti-group{-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0); box-shadow: 0 1px 2px rgba(0,0,0,0);}
-.fonti-group>a{display:inline-block;padding-top:11px;padding-bottom:11px;}
+.fonti-group>a{display:inline-block;padding-top:10px;padding-bottom:10px;font-size:10px;}
 .fonti-group>a:nth-child(even){margin:4px 0px;}
 /******** colori *****/
 /* archeologica : #71FF40
@@ -90,33 +90,40 @@ a.active:before{ content: "\f0da"; font-family: FontAwesome; display: block; hei
 .bg-red { background: #ff5b57;}
 .bg-black { background: #2d353c;}
 /*********************/
+.overlayTip{background: rgba(0,0,0,0.5); z-index: 3; padding: 0px 10px; color: #fff;}
+.overlayTip small{color:#fff;}
 
 @media screen and (max-width: 767px){
     body:before { content: 'xs'; display: none; }
     #mappa{height:300px;}
     .fonti-group>a{width:100%;}
+    .overlayTip{position: relative; padding: 10px;}
 }
 @media (min-width: 768px) and (max-width: 991px) {
     body:before { content: 'sm'; display: none; }
     .navbar-toggle {position: absolute; display: block; padding: 9px 10px; right: 0px;}
     #mappa{height:400px;}
     .fonti-group>a{width:48%;}
+    .overlayTip{position: absolute; bottom: 0; left: 15px; right: 15px; }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
     body:before { content: 'md'; display: none; }
     #mappa{height:500px;}
     .navbar-toggle {position: absolute; display: block; padding: 9px 10px; right: 0px;}
     .fonti-group>a{width:48%;}
+    .overlayTip{position: absolute; bottom: 0; left: 15px; right: 15px; }
 }
 @media (min-width: 992px) and (max-width: 1199px)and (orientation: landscape){
     body:before { content: 'md-ls'; display: none; }
     #mappa{height:500px;}
     .navbar-toggle {position: absolute; display: block; padding: 9px 10px; right: 0px;}
     .fonti-group>a{width:32%;}
+    .overlayTip{position: absolute; bottom: 0; left: 15px; right: 15px; }
 }
 @media screen and (min-width: 1200px) {
     body:before { content: 'lg'; display: none; }
     .navbar-toggle {position: absolute; display: block; padding: 9px 10px; right: 0px;}
     .fonti-group>a{width:32%;}
     #mappa{height:600px;}
+    .overlayTip{position: absolute; bottom: 0; left: 15px; right: 15px;display: none;}
 }

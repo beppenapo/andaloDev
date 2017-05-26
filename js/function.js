@@ -1,27 +1,3 @@
-// variabili geometriche da usare nelle mappe
-var map;
-var mousePositionControl = new ol.control.MousePosition({
-    coordinateFormat: ol.coordinate.createStringXY(4),
-    projection: 'EPSG:4326',
-    undefinedHTML: '&nbsp;'
-});
-var baselayers = new ol.layer.Group({
-    title: 'Baselayers',
-    layers: [
-        new ol.layer.Tile({
-            title: 'OSM',
-            type: 'base',
-            visible: true,
-            source: new ol.source.OSM()
-        })
-    ]
-});
-var view = new ol.View({
-    center: ol.proj.fromLonLat([11, 46.16]),
-    zoom: 12
-});
-
-
 $(document).ready(function(){
     linkActive();
     var dim = viewportSize();
@@ -31,6 +7,7 @@ $(document).ready(function(){
     $("#toggleNav").on('click', function(){ toggleNav(dim.w); });
     $("#login").on('click', function(){ login(); });
     $("#logout").on('click', function(){ logout(); });
+    $(".prevent").on("click", function(e){e.preventDefault();});
 });
 
 function viewportSize(){
@@ -114,6 +91,32 @@ function getPageName(){
     return page;
 }
 
+
+// variabili geometriche da usare nelle mappe
+var map;
+var mousePositionControl = new ol.control.MousePosition({
+    coordinateFormat: ol.coordinate.createStringXY(4),
+    projection: 'EPSG:4326',
+    undefinedHTML: '&nbsp;'
+});
+var baselayers = new ol.layer.Group({
+    title: 'Baselayers',
+    layers: [
+        new ol.layer.Tile({
+            title: 'OSM',
+            type: 'base',
+            visible: true,
+            source: new ol.source.OSM()
+        })
+    ]
+});
+var view = new ol.View({
+    center: ol.proj.fromLonLat([11, 46.16]),
+    zoom: 12
+});
+
+
+
 /// mappe
 function initindex() {
     map = new ol.Map({
@@ -126,4 +129,18 @@ function initindex() {
         ])
         ,layers: [baselayers]
     });
+
+    $(".zoom2ext").on("click", function(){
+        var xmin = parseFloat($(this).data('xmin'));
+        var ymin = parseFloat($(this).data('ymin'));
+        var xmax = parseFloat($(this).data('xmax'));
+        var ymax = parseFloat($(this).data('ymax'));
+        zoom2ext(xmin,ymin,xmax,ymax);
+    });
+}
+function zoom2ext(xmin,ymin,xmax,ymax){
+    var coomin = ol.proj.fromLonLat([xmin,ymin], 'EPSG:4326');
+    var coomax = ol.proj.fromLonLat([xmax,ymax], 'EPSG:4326');
+    var extent=[coomin[0],coomin[1],coomax[0],coomax[1]];
+    view.fit(extent, map.getSize());
 }
