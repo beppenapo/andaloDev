@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+body {background: #d9e0e7; font-size: 12px; font-family: 'Open Sans',"Helvetica Neue",Helvetica,Arial,sans-serif; color: #707478;}
+ul{list-style-type: none;padding: 0;margin: 0;}
+a:link,a:visited,a:hover, a:active{text-decoration:none;}
+a.active:before{ content: "\f0da"; font-family: FontAwesome; display: block; height: 27px; line-height: normal; width: 27px; position: absolute; left: 0; font-size: 15px; color: #d9e0e7;}
+
+#mainHeader{position:fixed;top:0px;left:0;right:0;background: #2d353c;width:220px;z-index:3;}
+
+#mainNavigation{position:fixed;top:50px;bottom:0;background: #2d353c;width:220px;overflow: auto;z-index:3}
+#mainNavigation>nav>ul{}
+#mainNavigation>nav>ul>li{ border-bottom: 1px solid #1A1817; border-top: 1px solid #525151;}
+#mainNavigation>nav>ul>li>a {display:block;padding: 8px 20px; line-height: 20px; color: #a8acb1; font-size:15px; }
+#mainNavigation>nav>ul>li>a:hover, a.active { background: #232a2f; color: #fff !important;}
+#mainNavigation>nav>ul>li>a>i{display: inline-block; width: 30px;}
+#mainNavigation>nav>ul>li>a>span{position:absolute;right:10px;margin-top:5px;}
+    #divUsr{position:relative;width:100%;height:55px;background:#000;border-bottom: 1px solid #1A1817;padding-left:14px;}
+    #divUsr>a{font-size:20px;line-height:50px;color:#00bfff;}
+    #divUsr>a>i{margin-right:10px;}
+    .submenu{position: relative; background:#000;}
+    .submenu:before { content: ""; display: block; position: absolute; z-index: 1; left: 26px; top: 0; bottom: 0; border-left: 1px solid #7A7A7A;}
+    .submenu>li>a{display:block;padding:4px 50px; font-size:15px;}
+    .submenu>li>a:before{ content: '\f111'; font-family: FontAwesome; position: absolute; left: 23px; font-size:8px; color: #337ab7; margin-top: 3px;}
+    .submenu>li>a:hover:before,.submenu>li>a:hover{color:#fff;}
+.navbar-default{background:#fff;}
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {background-color: transparent;}
+.navbar-default .navbar-toggle {border-color: transparent;}
+.navbar-brand{color:#337ab7 !important;}
+.navbar-brand>i{font-weight:bold;}
+#mainMenuList>li.panel{
+    margin: 0px;
+    background-color: transparent;
+    border-bottom: 1px solid #1A1817;
+    border-top: 1px solid #525151;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+#mainSection{position:relative;margin-top:70px;margin-bottom: 30px;margin-left: 0px;z-index:2;}
+#mappa{width:100%;padding:0;margin:0;}
+
+#mainFooter{background:#337ab7; color:#fff; padding:15px 20px; z-index:2;}
+#mainFooter a{color:#fff;border-bottom:1px dashed #fff;}
+#mainFooter>div>div:first-child{text-align:right;}
+
+.aside-open{right:0;}
+.aside-closed{right:-220px;}
+.aside-min{right:-176px;}
+.section-def{margin-right:230px !important;}
+.section-open{margin-right:0px !important;}
+.section-lg{margin-right:55px !important;}
+.animate{-webkit-transition: all .30s linear; -moz-transition: all .30s linear; -ms-transition: all .30s linear; -o-transition: all .30s linear; transition: all .30s linear;}
+.modal-footer{text-align:center;}
+.logOutAlert{position: absolute; top: 20%; left: 30%; width: 30%; font-size: 15px; text-align: center;}
+.widget { margin-bottom: 5px; color: #fff;padding:15px;border-radius:3px;overflow:hidden;}
+.widget .widget-icon { font-size: 80px; text-align: center; color: #fff; position: absolute; right: 15%; top: 10%; opacity: .2; filter: alpha(opacity=20);}
+.widget .widget-link a { display: block; margin: 15px -15px -15px; padding: 7px 15px; background: rgba(0,0,0,.4); text-align: right; color: #ddd;  font-weight: 300; text-decoration: none;}
+
+.panel-inverse{border:0px transparent;}
+.panel-inverse>.panel-heading { background: #242a30;color:#fff;font-size: 14px;}
+
+/********* classi generiche *******/
+.no-padding{padding:0px;}
+.inline-block{display:inline-block;}
+.list-group.fonti-group{-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0); box-shadow: 0 1px 2px rgba(0,0,0,0);}
+.fonti-group>a{display:inline-block;padding-top:11px;padding-bottom:11px;}
+.fonti-group>a:nth-child(even){margin:4px 0px;}
+/******** colori *****/
+/* archeologica : #71FF40
+/* architettonica: #FF0000
+/* archivistica: #FF00FF
+/* bibliografica : #FFCA01
+/* cartografica : #FF5C76
+/* fotografica : #00FF00
+/* materiale : #008000
+/* orale/audio : #52C734
+/* storico-artistica : #0095D8
+*/
+.bg-archeo{background:#71FF40;}
+.bg-architett{background:#FF0000;}
+.bg-archiv{background:#FF00FF;}
+.bg-biblio{background:#FFCA01;}
+.bg-carto{background:#FF5C76;}
+.bg-foto{background:#00FF00;}
+.bg-mat{background:#008000;}
+.bg-audio{background:#52C734;}
+.bg-stoart{background:#0095D8;}
+.bg-green { background: #00acac;}
+.bg-purple { background: #727cb6;}
+.bg-red { background: #ff5b57;}
+.bg-black { background: #2d353c;}
+/*********************/
+
+@media screen and (max-width: 767px){
+    body:before { content: 'xs'; display: none; }
+    #mappa{height:300px;}
+    .fonti-group>a{width:100%;}
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    body:before { content: 'sm'; display: none; }
+    .navbar-toggle {position: absolute; display: block; padding: 9px 10px; right: 0px;}
+    #mappa{height:400px;}
+    .fonti-group>a{width:48%;}
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+    body:before { content: 'md'; display: none; }
+    #mappa{height:500px;}
+    .navbar-toggle {position: absolute; display: block; padding: 9px 10px; right: 0px;}
+    .fonti-group>a{width:48%;}
+}
+@media (min-width: 992px) and (max-width: 1199px)and (orientation: landscape){
+    body:before { content: 'md-ls'; display: none; }
+    #mappa{height:500px;}
+    .navbar-toggle {position: absolute; display: block; padding: 9px 10px; right: 0px;}
+    .fonti-group>a{width:32%;}
+}
+@media screen and (min-width: 1200px) {
+    body:before { content: 'lg'; display: none; }
+    .navbar-toggle {position: absolute; display: block; padding: 9px 10px; right: 0px;}
+    .fonti-group>a{width:32%;}
+    #mappa{height:600px;}
+}
