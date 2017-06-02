@@ -5,7 +5,10 @@ require("class/funzioni.php");
 ?>
 <!DOCTYPE html>
 <html lang="it">
-    <head><?php require("inc/head.php"); ?></head>
+    <head>
+        <link href="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.css" rel="stylesheet" media="screen" />
+        <?php require("inc/head.php"); ?>
+    </head>
     <body onload="initindex()">
         <header id="mainHeader"><?php require("inc/header.php"); ?></header>
         <aside id="mainNavigation" class="animate"><?php require("inc/navigation.php"); ?></aside>
@@ -35,6 +38,11 @@ require("class/funzioni.php");
                                 <a href="#" class="list-group-item bg-stoart animate"><span class="badge">1114</span> STORICO-ARTISTICHE</a>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 chartWrap">
+                        <div id='chart'></div>
                     </div>
                 </div>
                 <div class="row">
@@ -90,8 +98,11 @@ require("class/funzioni.php");
         </section>
         <footer id="mainFooter"><?php require("inc/footer.php"); ?></footer>
         <div id="popup"></div>
-        
+
         <?php require("lib/script.php"); ?>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+        <script src="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.min.js"></script>
+        <script src="js/lineGraph.js"></script>
         <script>
         $(document).ready(function(){
             var heightFotoList = $(".fotoTitle").innerHeight();
