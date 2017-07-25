@@ -129,14 +129,6 @@ function initindex() {
         ])
         ,layers: [baselayers]
     });
-
-    $(".zoom2ext").on("click", function(){
-        var xmin = parseFloat($(this).data('xmin'));
-        var ymin = parseFloat($(this).data('ymin'));
-        var xmax = parseFloat($(this).data('xmax'));
-        var ymax = parseFloat($(this).data('ymax'));
-        zoom2ext(xmin,ymin,xmax,ymax);
-    });
 }
 function zoom2ext(xmin,ymin,xmax,ymax){
     var coomin = ol.proj.fromLonLat([xmin,ymin], 'EPSG:4326');

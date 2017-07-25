@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><i class="fa fa-gg" aria-hidden="true"></i> Trame archeologiche</a>
+            <a class="navbar-brand" href="#"><i class="fa fa-gg" aria-hidden="true"></i> Fonti per la storia</a>
         </div>
     </div>
 </nav>
