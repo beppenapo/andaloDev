@@ -90,8 +90,32 @@ function getPageName(){
     var page = path.substring(0,path.lastIndexOf("."));
     return page;
 }
+function viewportSize(){
+  var mq = window.getComputedStyle(document.querySelector('body'), ':before').getPropertyValue('content');
+  var w = window.innerWidth;
+  var h = window.innerHeight;
+  var viewportSize = new Object();
+  viewportSize.mq = mq;
+  viewportSize.w = w;
+  viewportSize.h = h;
+  return viewportSize;
+}
 
+function elDim(el){
+    var obj = document.getElementById(el);
+    var w = obj.scrollWidth;
+    var h = obj.innerHeight;
+    var dim = new Object();
+    dim.w = w;
+    dim.h = h;
+    return dim;
+}
 
+function getCss(el,pseudo,css){
+    var obj = document.getElementById(el);
+    var style = window.getComputedStyle(obj,pseudo);
+    return parseInt(style.getPropertyValue(css));
+}
 // variabili geometriche da usare nelle mappe
 var map;
 var mousePositionControl = new ol.control.MousePosition({
