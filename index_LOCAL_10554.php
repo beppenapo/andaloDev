@@ -7,6 +7,7 @@ $totFonti = $stat->totFonti();
 $z = 0;
 foreach ($totFonti as $key => $value) {
     $z++;
+    // $isto .= "<div class='istoDiv bg-".$value['css']."' id='".$value['fonte']."' data-tot='".$value['tot']."' data-zindex='".$z."'>".$value['etichetta']." (".$value['tot'].")</div>";
     $isto .= "<input type='hidden' value='".$value['tot']."' id='".$value['fonte']."' class='istoDiv' name='istoValue' data-bg='".$value['css']."' />";
 }
 ?>
