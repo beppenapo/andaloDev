@@ -30,9 +30,7 @@ function rectangularAreaChartDefaultSettings(){
  * valuePrefix and valueSuffix are optional.
  */
 function loadRectangularAreaChart(elementId, data, settings){
-    var dataSorter = function(a, b) {
-        return a.value - b.value;
-    };
+    var dataSorter = function(a, b) { return a.value - b.value; };
 
     var valueFormatter = function(d, overrideValue){
         var valueText = d.valuePrefix? d.valuePrefix : "";
@@ -97,6 +95,7 @@ function loadRectangularAreaChart(elementId, data, settings){
     boxGroup.append("rect")
         .attr("width", function(d) { return sizeScaleWidth(d.value); })
         .attr("height", function(d) { return sizeScaleHeight(d.value); })
+        .attr("data-tpsch", function(d){return d.tpsch;})
         .style("fill", function(d) { return settings.colorsScale(d.label); })
         .append("title")
         .text(function(d) { return d.label + " (" + valueFormatter(d) + ")"; });

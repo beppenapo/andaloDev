@@ -32,7 +32,10 @@ function toggleNav(dim){
     var secClass = dim > 1023 ? 'section-lg':'section-open';
     $("#mainNavigation").toggleClass('aside-open '+navClass);
     $("#mainSection").toggleClass('section-open '+secClass);
-    setTimeout( function() { map.updateSize();}, 500);
+    setTimeout( function() {
+        map.updateSize();
+        //setChart();
+    }, 500);
 }
 function logout(){
     $.ajax({
@@ -116,6 +119,22 @@ function getCss(el,pseudo,css){
     var style = window.getComputedStyle(obj,pseudo);
     return parseInt(style.getPropertyValue(css));
 }
+
+function getTipoSk(){
+    // var lista = new Object;
+    var archeo = {id:6,fonte:'archeologica', argomento:'archeologia', css:'#71FF40'};
+    var archit = {id:8,fonte:'architettonica', argomento:'architettura', css:'#FF0000'};
+    var archiv = {id:4,fonte:'archivistica', argomento:'archivistica', css:'#FF00FF'};
+    var biblio = {id:5,fonte:'bibliografica', argomento:'bibliografia', css:'#FFCA01'};
+    var carto = {id:10,fonte:'cartografica', argomento:'cartografia storica', css:'#FF5C76'};
+    var cultmat = {id:2,fonte:'materiale', argomento:'cultura materiale', css:'#008000'};
+    var orale = {id:1,fonte:'orale', argomento:'cultura materiale', css:'#52C734'};
+    var foto = {id:7,fonte:'fotografica', argomento:'fotografia', css:'#00FF00'};
+    var stoart = {id:9,fonte:'storico-artistica', argomento:'storia dell&#8216;arte', css:'#0095D8'};
+    return [archeo,archit,archiv,biblio,carto,cultmat,orale,foto,stoart];
+
+}
+
 // variabili geometriche da usare nelle mappe
 var map;
 var mousePositionControl = new ol.control.MousePosition({
@@ -139,6 +158,20 @@ var view = new ol.View({
     zoom: 12
 });
 
+function setChart(){
+    var viewport = viewportSize();
+    var istoWidth = getCss('isto',null,'width');
+    if(viewport.mq==='"xs"' || viewport.mq==='"sm"' ){
+        var width = istoWidth - 30;
+        console.log(width);
+        document.getElementById('chart').setAttribute("height", '150');
+        document.getElementById('chart').setAttribute("width", width);
+    }else {
+        var istoTitleWidth = getCss('istoTitle',null,'width');
+        document.getElementById('chart').setAttribute("width", istoWidth-istoTitleWidth+50);
+        document.getElementById('chart').setAttribute("height", '120');
+    }
+}
 
 
 /// mappe

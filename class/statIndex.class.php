@@ -23,5 +23,10 @@ class statIndex extends Db{
             else '#ffffff' end as css from scheda s, lista_tipo_scheda l, ricerca r where r.hub = 1 and s.fine = 2 and s.cmp_id = r.id and s.dgn_tpsch = l.id group by l.id order by tot desc;";
         return $this->select($sql);
     }
+
+    public function tpschList(int $tpsch){
+        $sql = "SELECT scheda.id, scheda.dgn_dnogg FROM scheda, ricerca WHERE scheda.cmp_id = ricerca.id AND scheda.fine = 2 AND ricerca.hub = 1 AND dgn_tpsch = ".$tpsch.";";
+        return json_encode($this->select($sql));
+    }
 }
  ?>
