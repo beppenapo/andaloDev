@@ -24,7 +24,7 @@ class Fonte extends Db{
         return $this->select($sql);
     }
 
-    public function tpschList(int $tpsch){
+    public function tpschList($tpsch){
         $sql = "SELECT scheda.id, scheda.dgn_dnogg FROM scheda, ricerca WHERE scheda.cmp_id = ricerca.id AND scheda.fine = 2 AND ricerca.hub = 1 AND dgn_tpsch = ".$tpsch.";";
         return json_encode($this->select($sql));
     }
