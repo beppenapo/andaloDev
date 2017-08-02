@@ -8,13 +8,20 @@
 #chart rect:hover{fill: #FFFA00 !important; cursor:pointer;}
 #lista{display:none;}
 .lista {position: relative; min-height: 200px; height: auto; max-height: 400px; overflow: auto;}
+
+#mapToolBar { position: absolute; top: 45px; right:15px; z-index: 2;}
+#status{font-size:15px;display:none;}
+#switchLayer { position: absolute;top: 75px; right:20px; width: 160px; font-size: 10px; line-height: 20px; z-index: 3;}
+#switchLayer > .panel-heading{font-size: 12px;font-weight: bold;cursor: pointer;}
+#switchLayer > .list-group > .list-group-item:first-child{margin-top:0px;}
+#switchLayer i{margin-right:10px; }
 @media screen and (max-width: 767px){
     #totFonti>div{display: block;margin:0px 15px;}
-
+    #switchLayer{display:none;}
 }
 @media (min-width: 768px) and (max-width: 991px) {
     #totFonti>div{display: block;margin:0px 15px;}
-
+    #switchLayer{display:none;}
 }
 @media (min-width: 992px) and (max-width: 1199px) {
     #totFonti>div{display: inline-block;height:150px;}

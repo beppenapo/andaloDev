@@ -1,5 +1,5 @@
 <?php
-require("../class/statIndex.class.php");
-$class = new statIndex();
+require("../class/fonte.class.php");
+$class = new Fonte();
 echo $class->tpschList($_POST['tpsch']);
 ?>

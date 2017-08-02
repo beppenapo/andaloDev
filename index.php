@@ -1,7 +1,7 @@
 <?php
 require('class/init.php');
-require("class/statIndex.class.php");
-$stat = new statIndex();
+require("class/fonte.class.php");
+$stat = new Fonte();
 $tot = $stat->tot();
 $totFonti = $stat->totFonti();
 $z = 0;
@@ -17,7 +17,7 @@ foreach ($totFonti as $key => $value) {
         <link href="css/footable.bootstrap.min.css" rel="stylesheet">
         <link href="css/index.css" rel="stylesheet" media="screen" />
     </head>
-    <body onload="initindex()">
+    <body>
         <header id="mainHeader"><?php require("inc/header.php"); ?></header>
         <aside id="mainNavigation" class="animate"><?php require("inc/navigation.php"); ?></aside>
         <section id="mainSection" class="animate">
@@ -36,8 +36,8 @@ foreach ($totFonti as $key => $value) {
                     <div class="col-xs-12">
                         <div class="panel panel-inverse">
                             <div class="panel-heading">
-                                <div class="col-xs-11">Lista delle fonti che parlano di <strong></strong></div>
-                                <div class="col-xs-1 text-right"><i class="fa fa-times"></i></div>
+                                <div class="col-xs-10">Lista delle fonti che parlano di <strong></strong></div>
+                                <div class="col-xs-2 text-right"><i class="fa fa-times"></i></div>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="lista">
@@ -51,7 +51,32 @@ foreach ($totFonti as $key => $value) {
                     <div class="col-xs-12">
                         <div class="panel panel-inverse">
                             <div class="panel-heading">Mappa dei siti</div>
-                            <div id="mappa" class="panel-body"></div>
+                            <div id="mappa" class="panel-body">
+                                <div id="mapToolBar">
+                                    <div class="btn-toolbar" role="toolbar" aria-label="...">
+                                        <div class="btn-group" role="group" aria-label="...">
+                                            <button class="btn btn-primary hidden-xs hidden-sm hidden-md" id="status" disabled="disabled">ciao qui vengono scritti i nomi dei siti</button>
+                                        </div>
+
+                                        <div class="btn-group" role="group" aria-label="...">
+                                            <button type="button" class="btn btn-default" id="zoomin"><i class="fa fa-plus"></i></button>
+                                            <button type="button" class="btn btn-default" id="zoomout"><i class="fa fa-minus"></i></button>
+                                            <button type="button" class="btn btn-default" id="zoomHome"><i class="fa fa-bullseye"></i></button>
+                                            <button type="button" class="btn btn-default" id="geoloc"><i class="fa fa-map-marker"></i></button>
+                                        </div>
+                                        <div class="btn-group" data-toggle="buttons" role="group" aria-label="...">
+                                            <label class="btn btn-default active tt" for="osm" title="openstreetmap"> <input type="radio" name="baseLyr" id="osm" value="osm" autocomplete="off" checked><i class="fa fa-map"></i></label>
+                                            <label class="btn btn-default tt" for="sat" title="foto satellitare"> <input type="radio" name="baseLyr" id="sat" value="sat" autocomplete="off"><i class="fa fa-globe"></i></label>
+                                            <label class="btn btn-default tt active" for="switch" title="punti di interesse"> <input type="checkbox" name="vectorLyr" id="lyr" value="lyr" autocomplete="off" checked><i class="fa fa-list"></i></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="switchLayer" class="panel panel-default">
+                                    <div class="panel-heading"><i class="fa fa-ban"></i> Aree di interesse</div>
+                                    <div class="list-group" id="btnLayer"></div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -63,62 +88,6 @@ foreach ($totFonti as $key => $value) {
         <?php require("lib/script.php"); ?>
         <script src="http://d3js.org/d3.v3.min.js" language="JavaScript"></script>
         <script src="js/areaChart.js" language="JavaScript"></script>
-        <script>
-        $(document).ready(function(){
-            var schedeArr = getTipoSk();
-            setChart();
-            var data=[], bg=[];
-            var istoDiv = $(".istoDiv");
-            $.each(istoDiv, function(i,el){
-                var e = {value:$(el).val(), label: $(el).attr('id'), tpsch:$(el).data('id')};
-                data.push(e);
-                bg.push($(el).data('bg'));
-            });
-            //console.log(data[0].bg);
-            var config = rectangularAreaChartDefaultSettings();
-            config.expandFromLeft = false;
-            config.expandFromTop = false;
-            config.maxValue = 100;
-            config.labelAlignDiagonal = true;
-            config.colorsScale = d3.scale.ordinal().range(bg);
-            config.textColorScale = d3.scale.ordinal().range(["#fff"]);
-            config.animateDelay = 50;
-            loadRectangularAreaChart("chart", data, config);
-
-            $("rect").on('click', function(){
-                var t = $(this).data('tpsch'), lista='';
-                var obj = $.grep(schedeArr, function(e){ return e.id == t; });
-                $(".panel-heading>div>strong").html(obj[0].argomento);
-                $(".panel-heading i").css({"cursor":"pointer"}).on('click', function(){$("#lista").slideUp('fast');});
-                $("#schedaFiltro").html('');
-                $.ajax({
-                    type: "POST",
-                    url: "connector/tpschList.php",
-                    dataType:'json',
-                    data: {tpsch:t},
-                    success: function(data){
-                        $.each(data,function(k,v){
-                            lista += "<tr>";
-                            lista += "<td>"+v.dgn_dnogg+"</td>";
-                            lista += "<td data-type='html'><a href='scheda.php?sk="+v.id+"' title='apri scheda' data-tooltip='tooltip'><i class='fa fa-arrow-right'></i></a></td>";
-                            lista += "</tr>";
-                        });
-                        $("#tableSchede").html(lista);
-                        $('.foo').footable({ "filtering": { "enabled": true } });
-                        $("#tableSchede>thead>tr>th>form")
-                            .removeClass('form-inline')
-                            .detach()
-                            .appendTo("#schedaFiltro")
-                            .find('button.dropdown-toggle')
-                            .remove();
-                        if(!$('#lista').is(":visible")){$("#lista").slideDown('fast');}
-                    }
-                });
-            });
-        });
-
-
-
-        </script>
+        <script src="js/index.js" language="JavaScript"></script>
     </body>
 </html>

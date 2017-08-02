@@ -2,7 +2,7 @@
  *
  */
 require("db.class.php");
-class statIndex extends Db{
+class Fonte extends Db{
 
     public function tot(){
         $sql = "select s.id from scheda s, ricerca r where r.hub=1 and s.fine = 2 and s.cmp_id = r.id;";

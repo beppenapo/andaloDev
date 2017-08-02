@@ -135,35 +135,11 @@ function getTipoSk(){
 
 }
 
-// variabili geometriche da usare nelle mappe
-var map;
-var mousePositionControl = new ol.control.MousePosition({
-    coordinateFormat: ol.coordinate.createStringXY(4),
-    projection: 'EPSG:4326',
-    undefinedHTML: '&nbsp;'
-});
-var baselayers = new ol.layer.Group({
-    title: 'Baselayers',
-    layers: [
-        new ol.layer.Tile({
-            title: 'OSM',
-            type: 'base',
-            visible: true,
-            source: new ol.source.OSM()
-        })
-    ]
-});
-var view = new ol.View({
-    center: ol.proj.fromLonLat([11, 46.16]),
-    zoom: 12
-});
-
 function setChart(){
     var viewport = viewportSize();
     var istoWidth = getCss('isto',null,'width');
     if(viewport.mq==='"xs"' || viewport.mq==='"sm"' ){
         var width = istoWidth - 30;
-        console.log(width);
         document.getElementById('chart').setAttribute("height", '150');
         document.getElementById('chart').setAttribute("width", width);
     }else {
@@ -174,22 +150,208 @@ function setChart(){
 }
 
 
+
+// variabili geometriche da usare nelle mappe
+var map;
+var mousePositionControl = new ol.control.MousePosition({
+    coordinateFormat: ol.coordinate.createStringXY(4),
+    projection: 'EPSG:4326',
+    undefinedHTML: '&nbsp;'
+});
+var scaleLineControl = new ol.control.ScaleLine();
+var osm = new ol.layer.Tile({
+    title: 'OSM',
+    type: 'base',
+    visible: true,
+    source: new ol.source.OSM()
+});
+var sat = new ol.layer.Tile({
+    title: 'RealVista',
+    source: new ol.source.TileWMS({
+        url: 'http://213.215.135.196/reflector/open/service?',
+        params: {LAYERS: 'rv1', FORMAT: 'image/jpeg', TILED: true},
+        attributions: [new ol.Attribution({ html: "RealVista1.0 WMS OPEN di e-GEOS SpA - CC BY SA" })]
+    }),
+    visible: false
+});
+var baselayers = new ol.layer.Group({ title: 'Baselayers', layers: [osm,sat] });
+//var overlays = new ol.layer.Group({ title: 'Overlays', layers: [] });
+var zoomMap=12, center=ol.proj.transform([0, 0],'EPSG:4326', 'EPSG:3857');
+var view = new ol.View({ center: center, zoom: zoomMap });
+
+$("#zoomin").on('click', function(){ view.animate({zoom: view.getZoom() + 1, duration:500}); });
+$("#zoomout").on('click', function(){view.animate({zoom: view.getZoom() - 1, duration:500}); });
+$("#zoomHome").on('click', function(){ fitExtent(); });
+
+var clusterFill = new ol.style.Fill({ color: 'rgba(255, 153, 0, 0.8)' });
+var clusterStroke = new ol.style.Stroke({ color: 'rgba(255, 204, 0, 0.2)', width: 1 });
+var textFill = new ol.style.Fill({ color: '#fff' });
+var textStroke = new ol.style.Stroke({ color: 'rgba(0, 0, 0, 0.6)', width: 3 });
+var invisibleFill = new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.01)' });
+
+
+
 /// mappe
+var poi={}, layers={}, css={}, styleCache = {}, btn={};
 function initindex() {
+    document.removeEventListener('DOMContentLoaded', initindex);
+    fitExtent();
     map = new ol.Map({
         target: 'mappa',
         view: view,
-        controls: ol.control.defaults().extend([
-            new ol.control.Zoom()
-            ,new ol.control.ScaleLine()
-            ,mousePositionControl
-        ])
-        ,layers: [baselayers]
+        controls: ol.control.defaults({zoom:false}).extend([scaleLineControl, mousePositionControl]),
+        layers: [baselayers]
+    });
+
+    $.getJSON('connector/mappaSource.php', function (data) {
+        data.features.forEach(function (feature) {
+            if (!poi.hasOwnProperty(feature.properties.fonte)) { poi[feature.properties.fonte] = { "type": "FeatureCollection", "features": [] }; }
+            poi[feature.properties.fonte].features.push(feature);
+            css[feature.properties.fonte]=feature.properties.css;
+        });
+        setSwitchLayer();
+    });
+
+    $("input[name='baseLyr']").on('change', function(){
+        var lyr = $("input[name='baseLyr']:checked").val();
+        toggleBaseLyr(lyr);
+    });
+
+    /// geolocalizzazione //
+    var geolocation = new ol.Geolocation({ projection: view.getProjection() });
+    $("#geoloc").on('click', function() {
+        geolocation.setTracking(false);
+        geolocation.setTracking(true);
+        geolocation_source.addFeature(accuracyFeature);
+        geolocation_source.addFeature(positionFeature);
+    });
+
+    // update the HTML page when the position changes.
+    //geolocation.on('change', function() { el('info').innerText = geolocation.getAccuracy() + ' [m]'; });
+
+    // handle geolocation error.
+    geolocation.on('error', function(error) { console.log(error); });
+
+    var accuracyFeature = new ol.Feature();
+    geolocation.on('change:accuracyGeometry', function() { accuracyFeature.setGeometry(geolocation.getAccuracyGeometry()); });
+
+    var positionFeature = new ol.Feature();
+    positionFeature.setStyle(new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 6,
+            fill: new ol.style.Fill({ color: '#3399CC'}),
+            stroke: new ol.style.Stroke({ color: '#fff', width: 2 })
+        })
+    }));
+
+    geolocation.on('change:position', function() {
+        var coordinates = geolocation.getPosition();
+        positionFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
+        view.animate({
+            center: coordinates,
+            zoom:18,
+            duration: 500
+        });
+    });
+
+    var geolocation_source = new ol.source.Vector({});
+    var geolocation_layer = new ol.layer.Vector({ map: map, source: geolocation_source  });
+
+}
+
+function toggleBaseLyr(lyr){
+    if(lyr=='osm'){
+        sat.setVisible(false);
+        osm.setVisible(true);
+    }else {
+        sat.setVisible(true);
+        osm.setVisible(false);
+
+    }
+}
+
+function fitExtent(){
+    $.get('connector/extent.php', function(data){
+        var ext = data.split(',');
+        zoom2ext(ext[0],ext[1],ext[2],ext[3]);
     });
 }
+
 function zoom2ext(xmin,ymin,xmax,ymax){
     var coomin = ol.proj.fromLonLat([xmin,ymin], 'EPSG:4326');
     var coomax = ol.proj.fromLonLat([xmax,ymax], 'EPSG:4326');
     var extent=[coomin[0],coomin[1],coomax[0],coomax[1]];
-    view.fit(extent, map.getSize());
+    view.fit(extent,{duration:500});
+}
+
+function setSwitchLayer(){
+    var btnWrap = $("#btnLayer");
+    // //var group = Object.keys(poi).sort();
+    var $btn,$label,$input;
+    $.each(css, function(k,v){
+        initLayer(k);
+        $btn = $('<div/>',{class:'list-group-item checkbox'});
+        $label = $('<label/>',{style:'font-size:14px;padding-left:0px;', for:k+"Check"}).text(k);
+        $ico = $('<i/>',{class:'fa fa-circle', style:'color:'+v});
+        $input = $('<input/>',{type:'checkbox',name:'overlay', id:k+"Check"}).val(k).prop('checked',true);
+        $label.prepend($input).prepend($ico);
+        $btn.append($label);
+        btnWrap.append($btn);
+    })
+
+    $('#switchLayer input').on('change',function (e) {
+        initLayer(e.target.value);
+        $(this).prev('i').toggleClass('fa-circle-o fa-circle');
+        var c = overlayLength();
+        showHide(c);
+    }).hide();
+}
+function overlayLength(){return $('[name="overlay"]:checked').length;}
+function showHide(n){
+    if(n===8){
+        $("#switchLayer>.panel-heading>i").removeClass('fa-check-circle-o').addClass('fa-ban');
+    }else {
+        $("#switchLayer>.panel-heading>i").removeClass('fa-ban').addClass('fa-check-circle-o');
+
+    }
+}
+
+function initLayer(l){
+    if (!layers.hasOwnProperty(l)) {
+        layers[l] = new ol.layer.Vector({
+            source: new ol.source.Vector({ features: (new ol.format.GeoJSON()).readFeatures(poi[l]) }),
+            style: styleFunction
+        });
+        map.addLayer(layers[l]);
+        layers[l].set('name',l);
+    }else {
+        map.removeLayer(layers[l]);
+        delete layers[l];
+    }
+}
+
+function styleFunction(feature, resolution) {
+    var hex = feature.get('css');
+    var rgba = hex2rgba(hex,50);
+    var stroke = hex2rgba(hex,100);
+    if (!styleCache[rgba]) {
+        styleCache[rgba] = new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 8,
+                fill: new ol.style.Fill({ color: rgba}),
+                stroke: new ol.style.Stroke({ color: stroke, width: 1 })
+            })
+        })
+    }
+    return [styleCache[rgba]];
+}
+
+function hex2rgba(hex,opacity){
+    hex = hex.replace('#','');
+    r = parseInt(hex.substring(0,2), 16);
+    g = parseInt(hex.substring(2,4), 16);
+    b = parseInt(hex.substring(4,6), 16);
+
+    result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
+    return result;
 }
