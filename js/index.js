@@ -36,21 +36,22 @@ $(document).ready(function(){
             dataType:'json',
             data: {tpsch:t},
             success: function(data){
-                $.each(data,function(k,v){
-                    lista += "<tr>";
-                    lista += "<td>"+v.dgn_dnogg+"</td>";
-                    lista += "<td data-type='html'><a href='scheda.php?sk="+v.id+"' title='apri scheda' data-tooltip='tooltip'><i class='fa fa-arrow-right'></i></a></td>";
-                    lista += "</tr>";
-                });
-                $("#tableSchede").html(lista);
-                $('.foo').footable({ "filtering": { "enabled": true } });
-                $("#tableSchede>thead>tr>th>form")
-                    .removeClass('form-inline')
-                    .detach()
-                    .appendTo("#schedaFiltro")
-                    .find('button.dropdown-toggle')
-                    .remove();
-                if(!$('#lista').is(":visible")){$("#lista").slideDown('fast');}
+                console.log(data);
+                // $.each(data,function(k,v){
+                //     lista += "<tr>";
+                //     lista += "<td>"+v.dgn_dnogg+"</td>";
+                //     lista += "<td data-type='html'><a href='scheda.php?sk="+v.id+"' title='apri scheda' data-tooltip='tooltip'><i class='fa fa-arrow-right'></i></a></td>";
+                //     lista += "</tr>";
+                // });
+                // $("#tableSchede").html(lista);
+                // $('.foo').footable({ "filtering": { "enabled": true } });
+                // $("#tableSchede>thead>tr>th>form")
+                //     .removeClass('form-inline')
+                //     .detach()
+                //     .appendTo("#schedaFiltro")
+                //     .find('button.dropdown-toggle')
+                //     .remove();
+                // if(!$('#lista').is(":visible")){$("#lista").slideDown('fast');}
             }
         });
     });
